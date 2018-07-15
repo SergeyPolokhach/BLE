@@ -7,7 +7,7 @@ apply plugin: 'kotlin-android-extensions'
 android {
     compileSdkVersion 27
     defaultConfig {
-        applicationId "kotlin.com.cleveroad.ble"
+        applicationId "com.cleveroad.ble"
         minSdkVersion 19
         targetSdkVersion 27
         versionCode 1
