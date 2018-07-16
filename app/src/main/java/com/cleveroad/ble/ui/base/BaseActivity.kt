@@ -7,7 +7,7 @@ import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 
 
-abstract class BaseActivity : AppCompatActivity() {
+abstract class BaseActivity : AppCompatActivity(), BackPressedCallback {
 
     protected abstract val containerId: Int
 
@@ -26,6 +26,12 @@ abstract class BaseActivity : AppCompatActivity() {
                 addToBackStack(name)
             }
             commit()
+        }
+    }
+
+    override fun backPressed() {
+        with(supportFragmentManager) {
+            backStackEntryCount.takeUnless { it == 0 }?.let { popBackStack() } ?: onBackPressed()
         }
     }
 

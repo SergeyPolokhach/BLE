@@ -8,7 +8,7 @@ import com.cleveroad.ble.extensions.setClickListeners
 import com.cleveroad.ble.model.DeviceType
 import com.cleveroad.ble.ui.base.BaseFragment
 import com.cleveroad.ble.ui.base.bindInterfaceOrThrow
-import kotlinx.android.synthetic.main.choose_device_type.*
+import kotlinx.android.synthetic.main.fragment_choose_device_type.*
 
 
 class ChooseDeviceTypeFragment() : BaseFragment(), View.OnClickListener {
@@ -20,7 +20,7 @@ class ChooseDeviceTypeFragment() : BaseFragment(), View.OnClickListener {
         }
     }
 
-    override val layoutId = R.layout.choose_device_type
+    override val layoutId = R.layout.fragment_choose_device_type
 
     private var callback: ChooseDeviceTypeCallback? = null
 
