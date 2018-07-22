@@ -17,21 +17,17 @@ object StringUtils {
     }
 
     fun byteArrayInHexFormat(byteArray: ByteArray?): String? {
-        if (byteArray == null) {
-            return null
-        }
+        if (byteArray == null) return null
 
-        val stringBuilder = StringBuilder()
-        stringBuilder.append("{ ")
-        for (i in byteArray.indices) {
-            if (i > 0) {
-                stringBuilder.append(", ")
+        val stringBuilder = StringBuilder().apply {
+            append("{ ")
+            for (i in byteArray.indices) {
+                if (i > 0) append(", ")
+                val hexString = byteToHex(byteArray[i])
+                append(hexString)
             }
-            val hexString = byteToHex(byteArray[i])
-            stringBuilder.append(hexString)
+            append(" }")
         }
-        stringBuilder.append(" }")
-
         return stringBuilder.toString()
     }
 

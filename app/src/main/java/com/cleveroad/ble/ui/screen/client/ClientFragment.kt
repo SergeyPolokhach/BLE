@@ -115,7 +115,7 @@ class ClientFragment : BaseFragment(), View.OnClickListener {
         llServerContainer.hide()
 
         scanResults = HashMap()
-        scanCallback = BtleScanCallback(scanResults)
+        scanCallback = BleScanCallback(scanResults)
 
         bluetoothLeScanner = bluetoothAdapter?.bluetoothLeScanner
 
@@ -269,8 +269,8 @@ class ClientFragment : BaseFragment(), View.OnClickListener {
 
 
     // Callbacks
-
-    private inner class BtleScanCallback internal constructor(private val mScanResults: MutableMap<String, BluetoothDevice>?) : ScanCallback() {
+    private inner class BleScanCallback internal constructor(private val mScanResults: MutableMap<String, BluetoothDevice>?)
+        : ScanCallback() {
 
         override fun onScanResult(callbackType: Int, result: ScanResult) {
             addScanResult(result)
@@ -341,7 +341,9 @@ class ClientFragment : BaseFragment(), View.OnClickListener {
             }
         }
 
-        override fun onCharacteristicWrite(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic, status: Int) {
+        override fun onCharacteristicWrite(gatt: BluetoothGatt,
+                                           characteristic: BluetoothGattCharacteristic,
+                                           status: Int) {
             super.onCharacteristicWrite(gatt, characteristic, status)
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 log("Characteristic written successfully")
@@ -351,7 +353,9 @@ class ClientFragment : BaseFragment(), View.OnClickListener {
             }
         }
 
-        override fun onCharacteristicRead(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic, status: Int) {
+        override fun onCharacteristicRead(gatt: BluetoothGatt,
+                                          characteristic: BluetoothGattCharacteristic,
+                                          status: Int) {
             super.onCharacteristicRead(gatt, characteristic, status)
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 log("Characteristic read successfully")
@@ -361,13 +365,15 @@ class ClientFragment : BaseFragment(), View.OnClickListener {
             }
         }
 
-        override fun onCharacteristicChanged(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic) {
+        override fun onCharacteristicChanged(gatt: BluetoothGatt,
+                                             characteristic: BluetoothGattCharacteristic) {
             super.onCharacteristicChanged(gatt, characteristic)
             log("Characteristic changed, " + characteristic.uuid.toString())
             readCharacteristic(characteristic)
         }
 
-        private fun enableCharacteristicNotification(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic) {
+        private fun enableCharacteristicNotification(gatt: BluetoothGatt,
+                                                     characteristic: BluetoothGattCharacteristic) {
             val characteristicWriteSuccess = gatt.setCharacteristicNotification(characteristic, true)
             if (characteristicWriteSuccess) {
                 log("Characteristic notification set successfully for " + characteristic.uuid.toString())
@@ -382,13 +388,9 @@ class ClientFragment : BaseFragment(), View.OnClickListener {
         private fun readCharacteristic(characteristic: BluetoothGattCharacteristic) {
             val messageBytes = characteristic.value
             log("Read: " + StringUtils.byteArrayInHexFormat(messageBytes))
-            val message = StringUtils.stringFromBytes(messageBytes)
-            if (message == null) {
-                logError("Unable to convert bytes to string")
-                return
-            }
-
-            log("Received message: $message")
+            StringUtils.stringFromBytes(messageBytes)
+                    ?.let { log("Received message: $it") }
+                    ?: let { logError("Unable to convert bytes to string") }
         }
     }
 }

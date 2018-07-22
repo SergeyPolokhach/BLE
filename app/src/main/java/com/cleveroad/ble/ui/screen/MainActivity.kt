@@ -9,6 +9,7 @@ import com.cleveroad.ble.ui.screen.choose.ChooseDeviceTypeFragment
 import com.cleveroad.ble.ui.screen.client.ClientFragment
 import com.cleveroad.ble.ui.screen.server.ServerFragment
 
+
 class MainActivity : BaseActivity(), ChooseDeviceTypeCallback {
 
     override val containerId = R.id.container
