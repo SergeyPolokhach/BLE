@@ -44,5 +44,4 @@ abstract class BaseActivity : AppCompatActivity(), BackPressedCallback {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         supportFragmentManager.findFragmentById(containerId)?.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
-
 }

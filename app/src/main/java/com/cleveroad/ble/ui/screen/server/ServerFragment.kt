@@ -32,7 +32,6 @@ import java.util.*
 class ServerFragment : BaseFragment(), View.OnClickListener {
 
     companion object {
-
         fun newInstance() = ServerFragment().apply {
             arguments = Bundle()
         }
@@ -93,7 +92,6 @@ class ServerFragment : BaseFragment(), View.OnClickListener {
         gattServer = bluetoothManager?.openGattServer(ctx, gattServerCallback)
 
         setDeviceInfo()
-
         setupServer()
         startAdvertising()
     }
@@ -211,8 +209,14 @@ class ServerFragment : BaseFragment(), View.OnClickListener {
         handler?.post { devices?.remove(device) }
     }
 
-    fun sendResponse(device: BluetoothDevice, requestId: Int, status: Int, offset: Int, value: ByteArray?) {
-        handler?.post { gattServer?.sendResponse(device, requestId, status, 0, null) }
+    fun sendResponse(device: BluetoothDevice,
+                     requestId: Int,
+                     status: Int,
+                     offset: Int,
+                     value: ByteArray?) {
+        handler?.post {
+            gattServer?.sendResponse(device, requestId, status, 0, null)
+        }
     }
 
     private fun sendReverseMessage(message: ByteArray) {

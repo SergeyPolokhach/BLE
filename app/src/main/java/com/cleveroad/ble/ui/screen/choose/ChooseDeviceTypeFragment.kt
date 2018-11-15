@@ -11,10 +11,9 @@ import com.cleveroad.ble.ui.base.bindInterfaceOrThrow
 import kotlinx.android.synthetic.main.fragment_choose_device_type.*
 
 
-class ChooseDeviceTypeFragment() : BaseFragment(), View.OnClickListener {
+class ChooseDeviceTypeFragment : BaseFragment(), View.OnClickListener {
 
     companion object {
-
         fun newInstance() = ChooseDeviceTypeFragment().apply {
             arguments = Bundle()
         }

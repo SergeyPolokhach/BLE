@@ -2,6 +2,8 @@ package com.cleveroad.ble.utils
 
 import android.bluetooth.BluetoothGatt
 import android.bluetooth.BluetoothGattCharacteristic
+import android.bluetooth.BluetoothGattCharacteristic.PROPERTY_INDICATE
+import android.bluetooth.BluetoothGattCharacteristic.PROPERTY_WRITE_NO_RESPONSE
 import android.bluetooth.BluetoothGattService
 import com.cleveroad.ble.CHARACTERISTIC_ECHO_STRING
 import com.cleveroad.ble.SERVICE_STRING
@@ -10,7 +12,6 @@ import java.util.*
 object BluetoothUtils {
 
     // Characteristics
-
     fun findCharacteristics(bluetoothGatt: BluetoothGatt): List<BluetoothGattCharacteristic> {
         val matchingCharacteristics = ArrayList<BluetoothGattCharacteristic>()
 
@@ -27,9 +28,8 @@ object BluetoothUtils {
         return matchingCharacteristics
     }
 
-    fun findEchoCharacteristic(bluetoothGatt: BluetoothGatt): BluetoothGattCharacteristic? {
-        return findCharacteristic(bluetoothGatt, CHARACTERISTIC_ECHO_STRING)
-    }
+    fun findEchoCharacteristic(bluetoothGatt: BluetoothGatt) =
+            findCharacteristic(bluetoothGatt, CHARACTERISTIC_ECHO_STRING)
 
     private fun findCharacteristic(bluetoothGatt: BluetoothGatt, uuidString: String): BluetoothGattCharacteristic? {
         val serviceList = bluetoothGatt.services
@@ -41,70 +41,47 @@ object BluetoothUtils {
                 return characteristic
             }
         }
-
         return null
     }
 
-    fun isEchoCharacteristic(characteristic: BluetoothGattCharacteristic): Boolean {
-        return characteristicMatches(characteristic, CHARACTERISTIC_ECHO_STRING)
-    }
+    fun isEchoCharacteristic(characteristic: BluetoothGattCharacteristic) =
+            characteristicMatches(characteristic, CHARACTERISTIC_ECHO_STRING)
 
-    private fun characteristicMatches(characteristic: BluetoothGattCharacteristic?, uuidString: String): Boolean {
-        if (characteristic == null) {
-            return false
-        }
-        val uuid = characteristic.uuid
-        return uuidMatches(uuid.toString(), uuidString)
-    }
+    private fun characteristicMatches(characteristic: BluetoothGattCharacteristic?, uuidString: String) =
+            if (characteristic == null) false else uuidMatches(characteristic.uuid.toString(), uuidString)
 
-    private fun isMatchingCharacteristic(characteristic: BluetoothGattCharacteristic?): Boolean {
-        if (characteristic == null) {
-            return false
-        }
-        val uuid = characteristic.uuid
-        return matchesCharacteristicUuidString(uuid.toString())
-    }
+    private fun isMatchingCharacteristic(characteristic: BluetoothGattCharacteristic?) =
+            if (characteristic == null) false else matchesCharacteristicUuidString(characteristic.uuid.toString())
 
-    private fun matchesCharacteristicUuidString(characteristicIdString: String): Boolean {
-        return uuidMatches(characteristicIdString, CHARACTERISTIC_ECHO_STRING)
-    }
+    private fun matchesCharacteristicUuidString(characteristicIdString: String) =
+            uuidMatches(characteristicIdString, CHARACTERISTIC_ECHO_STRING)
 
-    fun requiresResponse(characteristic: BluetoothGattCharacteristic): Boolean {
-        return characteristic.properties and BluetoothGattCharacteristic.PROPERTY_WRITE_NO_RESPONSE != BluetoothGattCharacteristic.PROPERTY_WRITE_NO_RESPONSE
-    }
+    fun requiresResponse(characteristic: BluetoothGattCharacteristic) =
+            (characteristic.properties and PROPERTY_WRITE_NO_RESPONSE) != PROPERTY_WRITE_NO_RESPONSE
 
-    fun requiresConfirmation(characteristic: BluetoothGattCharacteristic): Boolean {
-        return characteristic.properties and BluetoothGattCharacteristic.PROPERTY_INDICATE == BluetoothGattCharacteristic.PROPERTY_INDICATE
-    }
+    fun requiresConfirmation(characteristic: BluetoothGattCharacteristic) =
+            (characteristic.properties and PROPERTY_INDICATE) == PROPERTY_INDICATE
 
     // Service
 
-    private fun matchesServiceUuidString(serviceIdString: String): Boolean {
-        return uuidMatches(serviceIdString, SERVICE_STRING)
-    }
-
     private fun findService(serviceList: List<BluetoothGattService>): BluetoothGattService? {
         for (service in serviceList) {
-            val serviceIdString = service.uuid
-                    .toString()
-            if (matchesServiceUuidString(serviceIdString)) {
+            if (matchesServiceUuidString(service.uuid.toString())) {
                 return service
             }
         }
         return null
     }
 
-    // String matching
+    private fun matchesServiceUuidString(serviceIdString: String) =
+            uuidMatches(serviceIdString, SERVICE_STRING)
 
-    // If manually filtering, substring to match:
-    // 0000XXXX-0000-0000-0000-000000000000
     private fun uuidMatches(uuidString: String, vararg matches: String): Boolean {
         for (match in matches) {
             if (uuidString.equals(match, ignoreCase = true)) {
                 return true
             }
         }
-
         return false
     }
 }
